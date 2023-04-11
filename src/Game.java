@@ -96,6 +96,22 @@ public class Game {
             count++;
          }
       }
+
+      int px=0,py=0;
+      boolean check=false;
+      while(check==false){
+         py=rand.nextInt(0,25);
+         px= rand.nextInt(0,55);
+         if(map[py][px]==":"){
+            check=true;
+         }
+      }
+
+      cn.getTextWindow().output(px,py,'P',new TextAttributes(Color.green));
+      map[py][px]=" ";
+
+      Thread.sleep(1100);
+      //map writing to the console
       for(int i = 0; i < 25; i++) {
          for(int j = 0; j < 55; j++) {
             if(map[i][j]==":"){
@@ -117,18 +133,7 @@ public class Game {
          System.out.print("\n");
       }
 
-      int px=1,py=1;
-      boolean check=false;
-      while(check=false){
-         py=rand.nextInt(0,25);
-         px= rand.nextInt(0,55);
-         if(map[py][px]==":"){
-            check=true;
-         }
-      }
-
       cn.getTextWindow().output(px,py,'P',new TextAttributes(Color.green));
-
       int time = 0;
       while(true) {
          int second=time/1000;
@@ -185,7 +190,10 @@ public class Game {
             //--------------------------------------------
             char rckey=(char)rkey;
             //        left          right          up            down
-            if(rckey=='%' || rckey=='\'' || rckey=='&' || rckey=='(') cn.getTextWindow().output(px,py, 'P',new TextAttributes(Color.green)); // VK kullanmadan test teknigi
+            if(rckey=='%' || rckey=='\'' || rckey=='&' || rckey=='(') {
+               cn.getTextWindow().output(px,py, 'P',new TextAttributes(Color.green));
+               map[py][px]=" ";
+            }// VK kullanmadan test teknigi
             else cn.getTextWindow().output(rckey);
 
             
