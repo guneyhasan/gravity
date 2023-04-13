@@ -12,34 +12,33 @@ public class CircularQueue
     }
     public void enqueue(Object obj)
     {
-        if(rear==capacity-1)
-            rear=0;
-        if(!isFull())
-            arr[++rear]=obj;
-        else
+        if(isFull())
             System.out.println("Queue Overflow");
+        else
+        {
+            rear=(rear+1)%capacity;
+            arr[rear]=obj;
+        }
     }
     public Object dequeue()
     {
-        Object temp;
-        if(!isEmpty())
-        {
-            temp=arr[front];
-            arr[front++] = null;
-        }
-        else
+        if(isEmpty())
         {
             System.out.println("Queue is Empty");
             return null;
         }
+        else
+        {
+            Object temp=arr[front];
+            arr[front]=null;
+            front=(front+1)%capacity;
+            return temp;
+        }
 
-        if(front==capacity-1)
-            front=0;
-        return temp;
     }
     public int size()
     {
-        if(rear==-1||arr[front]==null)
+        if(arr[front]==null)
         {
             return 0;
         }
@@ -50,7 +49,7 @@ public class CircularQueue
     }
     public boolean isEmpty()
     {
-        if(size()==0)
+        if(arr[front]==null)
             return true;
         else
             return false;
@@ -58,15 +57,19 @@ public class CircularQueue
 
     public boolean isFull()
     {
-        if(size()==capacity)
+        if (front==(rear + 1) % capacity && arr[front]!=null&&arr[rear]!=null)
             return true;
-        else return false;
+          else {
+            return false;
+        }
     }
     public Object peek()
     {
         if(!isEmpty())
             return arr[front];
-        else
-            return "Queue Empty";
+        else {
+            System.out.println("Queue is Empty");
+            return null;
+        }
     }
 }

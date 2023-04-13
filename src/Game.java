@@ -30,7 +30,6 @@ public class Game {
          s1.push(temp.peek());
          temp.pop();
       }
-
       for(int i =6 ;i<14;i++){
          int start_row = 8 - s1.size();
          if (i==6+start_row)
@@ -38,7 +37,6 @@ public class Game {
          else{
             cn.getTextWindow().output(62,i,' ');
          }
-
       }
    }
    Game() throws Exception {   // --- Contructor
@@ -75,10 +73,8 @@ public class Game {
 
       //=====================================================================================================================
       //game part begins
+
       //creating map
-
-
-      //START
       Object[][] map = new Object[25][55];
       Stack backpack = new Stack(8);
       char collected_number =' ';
@@ -110,7 +106,7 @@ public class Game {
          int row = rand.nextInt(24);
          int col = rand.nextInt(54);
          if (map[row][col] == ":") {
-            map[row][col] =  Integer.toString(rand.nextInt(4));
+            map[row][col] =  Integer.toString(rand.nextInt(3)+1);
             count++;
          }
       }
@@ -126,7 +122,7 @@ public class Game {
 
       int px=0,py=0;
       boolean check=false;
-      while(check==false){
+      while(!check){
          py=rand.nextInt(25);
          px= rand.nextInt(55);
          if(map[py][px]==":"){
@@ -135,7 +131,7 @@ public class Game {
       }
 
       cn.getTextWindow().output(px,py,'P',new TextAttributes(Color.green));
-      map[py][px]=" ";
+      map[py][px]="P";
 
       Thread.sleep(1100);
       //map writing to the console
@@ -152,6 +148,10 @@ public class Game {
             else if(map[i][j]=="#"){
                TextAttributes walltextAttributes=new TextAttributes(Color.darkGray,Color.black);
                cn.getTextWindow().output("#",walltextAttributes);
+            }
+            else if(map[i][j]=="P")
+            {
+                cn.getTextWindow().output(px,py,'P',new TextAttributes(Color.green));
             }
             else{
                System.out.print(map[i][j]);
@@ -171,28 +171,26 @@ public class Game {
 
       cn.getTextWindow().output(px,py,'P',new TextAttributes(Color.green));
 
-      int time = 0;
+       inqueue in=new inqueue();
+       cn.getTextWindow().setCursorPosition(65,0);
+       cn.getTextWindow().output("Input");
+       cn.getTextWindow().setCursorPosition(59,1);
+       cn.getTextWindow().output("+---------------+");
+       cn.getTextWindow().setCursorPosition(59,2);
+       cn.getTextWindow().output("|");
+       while(!in.isFull())//CursorPosition(60,2)
+       {
+           char temp=in.random();
+           in.Add(temp);
+           cn.getTextWindow().output(temp);
+       }
+       cn.getTextWindow().output("|");
+       cn.getTextWindow().setCursorPosition(59,3);
+       cn.getTextWindow().output("+---------------+");
 
 
-      inqueue in=new inqueue();
-      cn.getTextWindow().setCursorPosition(65,0);
-      cn.getTextWindow().output("Input");
-      cn.getTextWindow().setCursorPosition(59,1);
-      cn.getTextWindow().output("+---------------+");
-      cn.getTextWindow().setCursorPosition(59,2);
-      cn.getTextWindow().output("|");
-      while(!in.isFull())//CursorPosition(60,2)
-      {
-         char temp=in.random();
-         in.Add(temp);
-         cn.getTextWindow().output(temp);
-      }
-      cn.getTextWindow().output("|");
-      cn.getTextWindow().setCursorPosition(59,3);
-      cn.getTextWindow().output("+---------------+");
 
-
-      //UPDATE
+       int time = 0;
       while(true) {
          int second=time/1000;
          String outputtime=Integer.toString(second);
@@ -219,7 +217,9 @@ public class Game {
             try{
                if(rkey==KeyEvent.VK_LEFT) {
                   if(map[py][px-1]!="#" && map[py][px-1]!="0"){
+
                      collected_number = map[py][px-1].toString().charAt(0);
+                     map[py][px]=' ';
                      px--;
                   }
                }
@@ -230,7 +230,8 @@ public class Game {
                if(rkey==KeyEvent.VK_RIGHT ) {
                   if(map[py][px+1]!="#" &&map[py][px+1]!="0"){
                      collected_number = map[py][px+1].toString().charAt(0);
-                     px++;
+                      map[py][px]=' ';
+                      px++;
                   }
                }
             }
@@ -240,7 +241,8 @@ public class Game {
                if(rkey==KeyEvent.VK_UP ) {
                   if(map[py-1][px]!="#" && map[py-1][px]!="0"){
                      collected_number = map[py-1][px].toString().charAt(0);
-                     py--;
+                      map[py][px]=' ';
+                      py--;
                   }
                }
             }
@@ -250,7 +252,8 @@ public class Game {
                if(rkey==KeyEvent.VK_DOWN ){
                   if(map[py+1][px]!="#"&& map[py+1][px]!="0"){
                      collected_number = map[py+1][px].toString().charAt(0);
-                     py++;
+                      map[py][px]=' ';
+                      py++;
                   }
                }
             }catch (Exception e){}
@@ -290,7 +293,7 @@ public class Game {
             //        left          right          up            down
             if(rckey=='%' || rckey=='\'' || rckey=='&' || rckey=='(') {
                cn.getTextWindow().output(px,py, 'P',new TextAttributes(Color.green));
-               map[py][px]=" ";
+               map[py][px]="P";
             }// VK kullanmadan test teknigi
             else cn.getTextWindow().output(rckey);
 
@@ -305,6 +308,97 @@ public class Game {
             keypr=0;    // last action
          }
 
+
+          if(time%3000==0&&time!=0)
+          {  int randx=rand.nextInt(54)+1;
+              int randy=rand.nextInt(24)+1;
+              char pull=in.pull();
+              switch (pull)
+              {
+                  case '1':
+                      while(!(String.valueOf(map[randy][randx])==":"||String.valueOf(map[randy][randx])==" "))
+                      {
+                          randx=rand.nextInt(54)+1;
+                          randy=rand.nextInt(24)+1;
+                      }
+                      map[randy][randx]="1";
+                      cn.getTextWindow().setCursorPosition(randx,randy);
+                      cn.getTextWindow().output("1");
+                      break;
+                  case '2':
+                      while(!(String.valueOf(map[randy][randx])==":"||String.valueOf(map[randy][randx])==" "))
+                      {
+                          randx=rand.nextInt(54)+1;
+                          randy=rand.nextInt(24)+1;
+                      }
+                      map[randy][randx]="2";
+                      cn.getTextWindow().setCursorPosition(randx,randy);
+                      cn.getTextWindow().output("2");
+                      break;
+                  case '3':
+                      while(!(String.valueOf(map[randy][randx])==":"||String.valueOf(map[randy][randx])==" "))
+                      {
+                          randx=rand.nextInt(54)+1;
+                          randy=rand.nextInt(24)+1;
+                      }
+                      map[randy][randx]="3";
+                      cn.getTextWindow().setCursorPosition(randx,randy);
+                      cn.getTextWindow().output("3");
+                      break;
+                  case 'X':
+                      break;
+                  case 'O':
+                      while(!(String.valueOf(map[randy][randx])==":"||String.valueOf(map[randy][randx])==" "))
+                      {
+                          randx=rand.nextInt(54)+1;
+                          randy=rand.nextInt(24)+1;
+                      }
+                      map[randy][randx]="O";
+                      cn.getTextWindow().setCursorPosition(randx,randy);
+                      TextAttributes bouldertextAttributes=new TextAttributes(Color.lightGray,Color.gray);
+                      cn.getTextWindow().output("O",bouldertextAttributes);
+                      while(!(String.valueOf(map[randy][randx])=="O"))
+                      {
+                          randx=rand.nextInt(54)+1;
+                          randy=rand.nextInt(24)+1;
+                      }
+                      map[randy][randx]=":";
+                      cn.getTextWindow().setCursorPosition(randx,randy);
+                      TextAttributes earthsquaretextAttributes=new TextAttributes(Color.yellow,Color.yellow);
+                      cn.getTextWindow().output(":",earthsquaretextAttributes);
+                      break;
+                  case ':':
+                      while(!(String.valueOf(map[randy][randx])==" "))
+                      {
+                          randx=rand.nextInt(54)+1;
+                          randy=rand.nextInt(24)+1;
+                      }
+                      map[randy][randx]=":";
+                      cn.getTextWindow().setCursorPosition(randx,randy);
+                      earthsquaretextAttributes=new TextAttributes(Color.yellow,Color.yellow);
+                      cn.getTextWindow().output(":",earthsquaretextAttributes);
+                      break;
+                  case'e':
+                      while(!(String.valueOf(map[randy][randx])==":"))
+                      {
+                          randx=rand.nextInt(54)+1;
+                          randy=rand.nextInt(24)+1;
+                      }
+                      map[randy][randx]=":";
+                      cn.getTextWindow().setCursorPosition(randx,randy);
+                      cn.getTextWindow().output(" ");
+                      break;
+              }
+              in.Add();
+              cn.getTextWindow().setCursorPosition(60,2);
+              for(int i=0;i<in.size();i++)
+              {
+                  char temp=in.pull();
+                  in.Add(temp);
+                  cn.getTextWindow().output(temp);
+              }
+
+          }
 
          time+=100;
          Thread.sleep(100);

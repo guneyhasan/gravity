@@ -6,7 +6,7 @@ public class inqueue
     CircularQueue c=new CircularQueue(15);
     public void Add()
     {
-        int nextInt=r.nextInt(1,41);
+        int nextInt=r.nextInt(40)+1;
         char next;
         if(nextInt<7)
             next='1';
@@ -30,7 +30,7 @@ public class inqueue
     }
     public char random()
     {
-        int nextInt=r.nextInt(1,41);
+        int nextInt=r.nextInt(40)+1;
         char next;
         if(nextInt<7)
             next='1';
@@ -51,7 +51,7 @@ public class inqueue
     }
     public char pull()
     {
-        return (char)c.dequeue();
+       return (char)c.dequeue();
     }
     public char peek()
     {
